@@ -25,3 +25,5 @@ Route::get('/pump','HomeController@pump');
 Route::get('/light','HomeController@pump');
 Route::get('/memo','HomeController@memo');
 Route::get('/farmer','HomeController@farmer');
+
+Route::resource('task','TaskController');

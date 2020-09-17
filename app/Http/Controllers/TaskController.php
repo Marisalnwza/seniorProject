@@ -14,7 +14,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        //
+        return view('task.index', compact('task', $task));
     }
 
     /**
@@ -24,7 +24,9 @@ class TaskController extends Controller
      */
     public function create()
     {
-        //
+        // return view('pages.create');
+        $list = Task::where('status','like','%เก็บเกี่ยว%')->get();
+        return view('pages.create', compact('list'));
     }
 
     /**
@@ -35,9 +37,24 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request,['name'=>'required' , 'status'=>'required']);
+        $task = new Task(
+        ['name'=> $request->get('name'),
+        'status'=> $request->get('status')
+        ]);
+        $task->save();
+        
+        $t = Task::all();
+        dd($t);
+
+        return redirect()->route('task.create')->with('success','บันทึกแน้ว');
     }
 
+
+    public function test() {
+        $t = Task::all();
+        dd($t);
+    }
     /**
      * Display the specified resource.
      *
@@ -46,7 +63,7 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        //
+        return view('task.show', compact('task', $task));
     }
 
     /**
@@ -69,7 +86,10 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        //
+        $request->validate([ 'status'=>'required']);
+        $task -> status = $request->status;
+        $task->save();
+        return redirect()->route('task.create')->with('success','บันทึกแน้ว');
     }
 
     /**
