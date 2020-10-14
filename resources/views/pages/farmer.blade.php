@@ -9,17 +9,19 @@
             
             <tr>
                 <th scope="col">ภารกิจ</th>
+                <th scope="col">สถานะภารกิจ</th>
                 <th scope="col">คะแนนที่ได้รับ</th>
-                <th scope="col">สถานะ</th>
-                
-
             </tr>
 
             @for($i=0;$i<count($data);$i++)
             <tr>
-                <td>{{$data[$i]->info}}</td>
-                <td>{{$data[$i]->reward}}</td>
-                <td>{{$data[$i]->statusquest}}</td>
+                <td><center>{{$data[$i]->info}}</center></td>
+                <@if ($data[$i]->statusquest == "clear")
+                    <td><center>{{$data[$i]->statusquest}}</center></td>
+                @else
+                <td><center>/{{$data[$i]->value}}</center></td>
+                @endif>
+                <td><center>{{$data[$i]->reward}}</center></td>
             </tr>
             @endfor
 

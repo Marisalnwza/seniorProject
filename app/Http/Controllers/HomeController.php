@@ -12,7 +12,7 @@ class HomeController extends Controller
         return view('pages.pump');
     }
     public function light(){
-        return view('pages.pump');
+        return view('pages.light');
     }
     public function memo(){
         return view('pages.memo');
