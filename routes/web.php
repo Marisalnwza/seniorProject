@@ -25,5 +25,11 @@ Route::get('/pump','HomeController@pump');
 Route::get('/light','HomeController@pump');
 Route::get('/memo','HomeController@memo');
 Route::get('/farmer','HomeController@farmer');
+Route::get('/history','HomeController@history');
+Route::get('/setting','HomeController@setting');
 
 Route::resource('task','TaskController');
+
+Route::get('/create', function () {
+    return view('pages.create');
+});

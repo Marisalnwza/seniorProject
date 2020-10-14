@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Task;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use DB;
 
 class TaskController extends Controller
 {
@@ -14,8 +16,8 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return view('task.index', compact('task', $task));
-    }
+        return redirect('task');
+    } 
 
     /**
      * Show the form for creating a new resource.
@@ -25,8 +27,18 @@ class TaskController extends Controller
     public function create()
     {
         // return view('pages.create');
-        $list = Task::where('status','like','%เก็บเกี่ยว%')->get();
-        return view('pages.create', compact('list'));
+        $list = Task::all();
+
+        //$list = Task::where('id',1)->get();
+        //$to = Task::find(1);
+
+        //$to = Task::selectRaw(datediff(created_at, now()));//now
+        $from = \Carbon\Carbon::now();//now
+        //$diff = $to->diffInDays($from);
+
+
+
+        return view('pages.create', compact('list','from'));
     }
 
     /**
@@ -37,15 +49,19 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request,['name'=>'required' , 'status'=>'required']);
+        //dd($task["attributes"]->id);
+        $this->validate($request,['hold'=>'required','name'=>'required' , 'status'=>'required',
+        'harvest'=>'required','dropped'=>'required']);
         $task = new Task(
-        ['name'=> $request->get('name'),
-        'status'=> $request->get('status')
+        ['hold'=> $request->get('hold'),
+            'name'=> $request->get('name'),
+            'status'=> $request->get('status'),
+            'harvest'=> $request->get('harvest'),
+            'dropped'=> $request->get('dropped')
         ]);
         $task->save();
         
-        $t = Task::all();
-        dd($t);
+        
 
         return redirect()->route('task.create')->with('success','บันทึกแน้ว');
     }
@@ -63,7 +79,7 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        return view('task.show', compact('task', $task));
+        return redirect()->route('task.create');
     }
 
     /**
@@ -74,7 +90,7 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        return view('task.edit', compact('task', $task));
     }
 
     /**
@@ -86,10 +102,10 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        $request->validate([ 'status'=>'required']);
-        $task -> status = $request->status;
-        $task->save();
-        return redirect()->route('task.create')->with('success','บันทึกแน้ว');
+
+        DB::update('UPDATE tasks SET harvest="เก็บเกี่ยว" WHERE id=?',[$task->id]);
+
+        return redirect()->route('task.create');
     }
 
     /**
