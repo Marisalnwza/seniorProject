@@ -103,7 +103,7 @@ class PumpController extends Controller
         $pump->offMin = $request->offMin;
         $pump->save();
         $request->session()->flash('message','Successfully');
-        return redirect('pages.light');
+        return redirect('pages.pump');
     }
 
     /**

@@ -1,20 +1,34 @@
-@extends('master')
-@section('title','นับวันปลูก')
-@section('content')
 
 
-{{-- <html lang="en">
+<html lang="en">
 <head>
-  <title>Bootstrap Example</title>
+  <title>บันทึกวันปลูกผัก</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-</head> --}}
-
+</head>
 
 <body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand">Project</a>
+          </div>
+          <ul class="nav navbar-nav">
+            <li><a href="/">Home</a></li>
+            <li><a href="/pump/create">Pump</a></li>
+            <li><a href="/light/create">Grow light</a></li>
+            <li class="active"><a href="/task/create">Memo</a></li>
+            <li><a href="/quest/create">Farmer Book</a></li>
+            <li><a href="/history">History</a></li>
+          </ul>
+        </div>
+      </nav>
+
+
+    <h2>บันทึกวันปลูกผัก</h2>
     <table class="table">
         <thead class="thread-dark">
             
@@ -1207,4 +1221,3 @@ $i9=0;
     
 </div>
 
-@endsection

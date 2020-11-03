@@ -24,14 +24,17 @@ Route::get('/', function () {
 // Route::get('/pump','HomeController@pump');
 // Route::get('/light','PumpController@create');
 // Route::get('/memo','HomeController@memo');
+Route::get('/pumpdb','HomeController@pumpdb');
 Route::get('/farmer','HomeController@farmer');
 Route::get('/history','HomeController@history');
 Route::get('/setting','HomeController@setting');
+// Route::get('/quest','QuestController@create');
 // Route::get('/dd','PumpController@test');
 
 Route::resource('task','TaskController');
 Route::resource('pump','PumpController');
 Route::resource('light','LightController');
+Route::resource('quest','QuestController');
 
 Route::get('/create', function () {
     return view('pages.create');
@@ -43,6 +46,10 @@ Route::get('/pump', function () {
 
 Route::get('/light', function () {
     return view('pages.light');
+});
+
+Route::get('/quest', function () {
+    return view('pages.quest');
 });
 
 

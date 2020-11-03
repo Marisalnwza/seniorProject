@@ -60,6 +60,9 @@ class TaskController extends Controller
             'dropped'=> $request->get('dropped')
         ]);
         $task->save();
+
+        $his = DB::insert('INSERT INTO histories (event,status) value(?,?)',[$request->name,$request->status]);
+        //dd($his);
         
         
 
@@ -102,8 +105,15 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
+        dd('dd');
+        if($request->harvest == "เก็บเกี่ยว"){
+            DB::update('UPDATE tasks SET harvest="เก็บเกี่ยว" WHERE id=?',[$task->id]);
+            $his = DB::insert('INSERT INTO histories (event,status) value(?,?)',[$request->name,$request->harvest]);
+        }elseif($request->dropped == "ละทิ้ง"){
 
-        DB::update('UPDATE tasks SET harvest="เก็บเกี่ยว" WHERE id=?',[$task->id]);
+            DB::update('UPDATE tasks SET dropped ="ละทิ้ง" WHERE id=?',[$task->id]);
+            $his = DB::insert('INSERT INTO histories (event,status) value(?,?)',[$request->name,$request->dropped]);
+        }
 
         return redirect()->route('task.create');
     }

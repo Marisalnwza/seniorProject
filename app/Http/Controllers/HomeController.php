@@ -20,6 +20,9 @@ class HomeController extends Controller
     public function create(){
         return view('pages.create');
     }
+    public function pumpdb(){
+        return view('pages.pumpdb');
+    }
     public function farmer(){
         
         //dd(count($greenoak));
@@ -42,6 +45,7 @@ class HomeController extends Controller
         $rank = DB::select("SELECT * from rank;");
 
         $sumScore = DB::select("SELECT sum(quest.reward) sum FROM quest WHERE quest.statusquest='clear'; ");
+        
         DB::update("UPDATE user SET point = ? WHERE userid = '1';",[$sumScore[0]->sum]);
         //dd($sumScore[0]->sum);
 
@@ -58,10 +62,16 @@ class HomeController extends Controller
         }
 
 
-        return view('pages.farmer',['data'=>$q,'user'=>$user]);
+        return view('pages.farmer',['data'=>$q,'user'=>$user,'rank'=>$rank,'count'=>$count]);
     }
     public function history(){
-        return view('pages.history');
+
+
+        $list = DB::select("SELECT * from histories ORDER BY `histories`.`id` DESC;");
+        // dd($list);
+        $from = \Carbon\Carbon::now();//now
+
+        return view('pages.history', compact('list','from'));
     }
     public function setting(){
         return view('pages.setting');

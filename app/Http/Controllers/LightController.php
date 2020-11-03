@@ -14,7 +14,7 @@ class LightController extends Controller
      */
     public function index()
     {
-        //
+        return redirect()->route('pages.light');
     }
 
     /**
@@ -24,7 +24,9 @@ class LightController extends Controller
      */
     public function create()
     {
-        //
+        $lights = Light::all();
+        //dd($pumps);
+        return view('pages.light',compact('lights',$lights));
     }
 
     /**
@@ -35,7 +37,20 @@ class LightController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request,['onHour'=>'required','onMin'=>'required' , 'offHour'=>'required',
+        'offMin'=>'required']);
+        $light = new Light(
+        ['onHour'=> $request->get('onHour'),
+            'onMin'=> $request->get('onMin'),
+            'offHour'=> $request->get('offHour'),
+            'offMin'=> $request->get('offMin')
+
+        ]);
+        $light->save();
+        // dd($pump);
+        
+
+        return redirect()->route('light.create')->with('success','บันทึกแน้ว');
     }
 
     /**
@@ -46,7 +61,7 @@ class LightController extends Controller
      */
     public function show(Light $light)
     {
-        //
+        return redirect()->route('pages.light');
     }
 
     /**
@@ -57,7 +72,7 @@ class LightController extends Controller
      */
     public function edit(Light $light)
     {
-        //
+        return view('light.edit',compact('light',$light));
     }
 
     /**
@@ -69,7 +84,20 @@ class LightController extends Controller
      */
     public function update(Request $request, Light $light)
     {
-        //
+        $request->validate([
+            'onHour'=> 'request',
+            'onMin'=> 'request',
+            'offHour'=> 'request',
+            'offMin'=> 'request'
+        ]);
+
+        $light->onHour = $request->onHour;
+        $light->onMin = $request->onMin;
+        $light->offHour = $request->offHour;
+        $light->offMin = $request->offMin;
+        $light->save();
+        $request->session()->flash('message','Successfully');
+        return redirect('pages.light');
     }
 
     /**
@@ -78,8 +106,10 @@ class LightController extends Controller
      * @param  \App\Light  $light
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Light $light)
+    public function destroy(Light $light,Request $request)
     {
-        //
+        $light->delete();
+        $request->session()->flash('message','Successfully');
+        return redirect()->route('light.create');
     }
 }

@@ -1,8 +1,12 @@
+<?php 
+header("Content-type: application/json"); 
+?>
+
 <!DOCTYPE HTML>
 <html>
     <head>
         <meta charset="utf-8">
-        <title>NETPIE2020</title>
+        <title>PUMP</title>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.js" type="text/javascript"></script>
         <script type="text/javascript" src="Example.js"></script>
@@ -34,7 +38,7 @@
             }
         </style>
 
-            <title>Bootstrap Example</title>
+            <title>Pump</title>
             <meta charset="utf-8">
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -43,12 +47,29 @@
 
 
     </head>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Project</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li><a href="/">Home</a></li>
+          <li class="active"><a href="/pump/create">Pump</a></li>
+          <li><a href="/light/create">Grow light</a></li>
+          <li><a href="/task/create">Memo</a></li>
+          <li><a href="/quest/create">Farmer Book</a></li>
+          <li><a href="/history">History</a></li>
+        </ul>
+      </div>
+    </nav>
     <body>
         <center>
-            <h1>WELCOME TO NETPIE2020</h1>
-            <h3>LED Control : <span id="status" class="connect">Connect...</span></h3>
-            <p id="status-led">...</p>
-            <button id="led-on" disabled>ON</button>  <button id="led-off" disabled>OFF</button>
+            {{-- <h1>WELCOME TO NETPIE2020</h1> --}}
+            <h3>PUMP Control : <span id="status" class="connect">Connect...</span>NETPIE2020</h3>
+            <p id="status-pump">...</p>
+            <button id="pump-on" disabled>ON</button>  
+            <button id="pump-off" disabled>OFF</button>
+            <button id="timer" disabled>TIMER</button>
         </center> 
 
 
@@ -70,7 +91,8 @@
                   <div class="modal-body">
         <form method="post" action="{{url('pump')}}">
           {{csrf_field()}}
-          <div class="form-group">
+          เวลาเปิด<br>
+          <span class="form-group">
             <select name = "onHour" id="onHour">
               <option value="None">-- ชั่วโมง --</option>
               <option value="00">00</option>
@@ -98,9 +120,11 @@
               <option value="22">22</option>
               <option value="23">23</option>
             </select>
-          </div>
+          </span>
+
           :
-          <div class="form-group">
+          
+          <span class="form-group">
             <select name = "onMin" id="onMin">
               <option value="None">-- นาที --</option>
               <option value="00">00</option>
@@ -164,8 +188,9 @@
               <option value="58">58</option>
               <option value="59">59</option>
             </select>
-          </div>
-          <div class="form-group">
+          </span><br>
+          เวลาปิด<br>
+          <span class="form-group">
             <select name = "offHour" id="offHour">
               <option value="None">-- ชั่วโมง --</option>
               <option value="00">00</option>
@@ -193,9 +218,9 @@
               <option value="22">22</option>
               <option value="23">23</option>
             </select>
-          </div>
+          </span>
           :
-          <div class="form-group">
+          <span class="form-group">
             <select name = "offMin" id="offMin">
               <option value="None">-- นาที --</option>
               <option value="00">00</option>
@@ -259,7 +284,7 @@
               <option value="58">58</option>
               <option value="59">59</option>
             </select>
-          </div>
+          </span>
         <div class="modal-footer">
           <div class="form-group">
             <button type="submit" class="btn btn-primary "> ตั้งเวลา</button> 
@@ -306,21 +331,22 @@
                       </td>
         
                       </tr>
+                      
                     @endforeach
                   @endif
         
               </thead>
             </table>
-
-
+                      
     </body>
+    
 <script>
 $(document).ready(function(e) {
-    client = new Paho.MQTT.Client("mqtt.netpie.io", 443, "6e5592bc-1515-4ed3-931a-62a44bb4da67");
+    client = new Paho.MQTT.Client("mqtt.netpie.io", 443, "1b411593-0dce-4937-8ab2-de655051e741");
     var options = {
         useSSL: true,
-        userName: "ughPxmu4wVzZf3VqcNTKLVs8sNx8iCkw",
-        password: "#d*e#enAWdbrx0a3lLU1fZ-c2(rDiNCK",
+        userName: "TsCBYPJ3KaYvnVXRXp4R51wYkNcitCid",
+        password: "lwoCSyCp6V(G~XSXjOi_Fthd8#JupyyA",
         onSuccess:onConnect,
         onFailure:doFail
     }
@@ -328,8 +354,8 @@ $(document).ready(function(e) {
 
     function onConnect() {
         $("#status").text("Connected").removeClass().addClass("connected");
-        client.subscribe("@msg/led");
-        mqttSend("@msg/led", "GET");
+        client.subscribe("@msg/pump");
+        mqttSend("@msg/pump", "GET");
     }
 
     function doFail(e){
@@ -337,20 +363,26 @@ $(document).ready(function(e) {
     }
 
     client.onMessageArrived = function(message) {
-        if (message.payloadString == "LEDON" || message.payloadString == "LEDOFF") {
-            $("#led-on").attr("disabled", (message.payloadString == "LEDON" ? true : false));
-            $("#led-off").attr("disabled", (message.payloadString == "LEDOFF" ? true : false));
+        if (message.payloadString == "PUMPON" || message.payloadString == "PUMPOFF" || message.payloadString == "TIMER") 
+		{
+            $("#pump-on").attr("disabled", (message.payloadString == "PUMPON" ? true : false));
+            $("#pump-off").attr("disabled", (message.payloadString == "PUMPOFF" ? true : false));
+			$("#timer").attr("disabled", (message.payloadString == "TIMER" ? true : false));
         }
     }
     
-    $("#led-on").click(function(e) {
-        mqttSend("@msg/led", "LEDON");
-        document.getElementById("status-led").innerHTML = "LED is ON";
+    $("#pump-on").click(function(e) {
+        mqttSend("@msg/pump", "PUMPON");
+        document.getElementById("status-pump").innerHTML = "PUMP is ON";
     });
         
-    $("#led-off").click(function(e) {
-        mqttSend("@msg/led", "LEDOFF");
-        document.getElementById("status-led").innerHTML = "LED is OFF";
+    $("#pump-off").click(function(e) {
+        mqttSend("@msg/pump", "PUMPOFF");
+        document.getElementById("status-pump").innerHTML = "PUMP is OFF";
+    });
+	$("#timer").click(function(e) {
+        mqttSend("@msg/pump", "TIMER");
+        document.getElementById("status-pump").innerHTML = "MODE TIMER";
     });
 });
 var mqttSend = function(topic, msg) {
@@ -358,9 +390,5 @@ var mqttSend = function(topic, msg) {
     message.destinationName = topic;
     client.send(message);
 }
-
-
-
-
 </script>
 </html>

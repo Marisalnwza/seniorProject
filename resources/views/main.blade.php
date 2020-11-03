@@ -98,9 +98,9 @@
                   <a href="/pump/create">เปิด/ปิด ปั๊มน้ำ</a><br>
                   <a href="/light/create">เปิด/ปิด หลอดไฟ Grow Light</a><br>
                   <a href="/task/create">นับวันปลูกผัก</a><br>
-                  <a href="/farmer">สมุดนักปลูกผัก</a><br>
+                  <a href="/quest/create">สมุดนักปลูกผัก</a><br>
                   <a href="/history">ดูประวัติ</a><br>
-                  <a href="/setting">ตั้งค่า</a><br>
+                  {{-- <a href="/setting">ตั้งค่า</a><br> --}}
                 </div>
             </div>
         </div>
